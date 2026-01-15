@@ -5,7 +5,6 @@ import {
   generateDiscoveryDocument,
   generateFinalSynthesis,
 } from "@/lib/document-generator";
-import type { Session } from "@prisma/client";
 
 export async function POST(request: Request) {
   const session = await auth();
@@ -33,14 +32,14 @@ export async function POST(request: Request) {
   }
 
   // Verify prerequisites
-  const sessions: Session[] = await prisma.session.findMany({
+  const sessions = await prisma.session.findMany({
     where: { userId },
   });
 
   if (type === "DISCOVERY") {
-    const round1Complete = sessions
-      .filter((s: Session) => s.round === "ROUND_1")
-      .every((s: Session) => s.status === "COMPLETED");
+    const round1Sessions = sessions.filter((s) => s.round === "ROUND_1");
+    const round1Complete = round1Sessions.length > 0 &&
+      round1Sessions.every((s) => s.status === "COMPLETED");
 
     if (!round1Complete) {
       return NextResponse.json(
@@ -51,7 +50,8 @@ export async function POST(request: Request) {
   }
 
   if (type === "FINAL_SYNTHESIS") {
-    const allComplete = sessions.every((s: Session) => s.status === "COMPLETED");
+    const allComplete = sessions.length > 0 &&
+      sessions.every((s) => s.status === "COMPLETED");
 
     if (!allComplete) {
       return NextResponse.json(

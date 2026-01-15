@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { SignOutButton } from "@/components/SignOutButton";
+import { GenerateDocumentButton } from "@/components/GenerateDocumentButton";
 
 async function getSessionProgress(userId: string) {
   const sessions = await prisma.session.findMany({
@@ -214,6 +215,11 @@ export default async function Dashboard() {
                       </a>
                     )}
                   </div>
+                ) : progress.bothRound1Complete ? (
+                  <GenerateDocumentButton
+                    documentType="DISCOVERY"
+                    label="Generate Document"
+                  />
                 ) : (
                   <span className="text-muted">Waiting...</span>
                 )}
@@ -246,6 +252,11 @@ export default async function Dashboard() {
                       </a>
                     )}
                   </div>
+                ) : progress.bothRound2Complete ? (
+                  <GenerateDocumentButton
+                    documentType="FINAL_SYNTHESIS"
+                    label="Generate Document"
+                  />
                 ) : (
                   <span className="text-muted">Waiting...</span>
                 )}

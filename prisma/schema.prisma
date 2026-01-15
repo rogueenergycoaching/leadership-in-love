@@ -1,0 +1,75 @@
+// Prisma schema for Leadership in Love
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// User represents a couple with shared login
+model User {
+  id           String     @id @default(uuid())
+  email        String     @unique
+  passwordHash String
+  partnerAName String
+  partnerBName String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  sessions     Session[]
+  documents    Document[]
+}
+
+// Session for AI conversation
+model Session {
+  id            String        @id @default(uuid())
+  userId        String
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  partnerRole   PartnerRole
+  round         Round
+  status        SessionStatus @default(NOT_STARTED)
+  messages      Json          @default("[]") // Array of {role: 'user'|'assistant', content: string}
+  questionCount Int           @default(0)
+  insights      Json          @default("{}") // Structured data extracted by AI
+  startedAt     DateTime?
+  completedAt   DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@unique([userId, partnerRole, round])
+}
+
+// Generated documents
+model Document {
+  id        String       @id @default(uuid())
+  userId    String
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      DocumentType
+  content   String       @db.Text // Markdown content
+  pdfUrl    String?
+  createdAt DateTime     @default(now())
+
+  @@unique([userId, type])
+}
+
+enum PartnerRole {
+  A
+  B
+}
+
+enum Round {
+  ROUND_1
+  ROUND_2
+}
+
+enum SessionStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum DocumentType {
+  DISCOVERY
+  FINAL_SYNTHESIS
+}

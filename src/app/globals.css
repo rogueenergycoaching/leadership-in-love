@@ -1,26 +1,187 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fafafa;
+  --foreground: #1a1a2e;
+  --primary: #1e3a5f;
+  --primary-light: #2d5a87;
+  --primary-dark: #152d4a;
+  --accent: #d4a853;
+  --accent-light: #e4be73;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --card: #ffffff;
+  --error: #dc2626;
+  --success: #16a34a;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-light: var(--primary-light);
+  --color-primary-dark: var(--primary-dark);
+  --color-accent: var(--accent);
+  --color-accent-light: var(--accent-light);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-card: var(--card);
+  --color-error: var(--error);
+  --color-success: var(--success);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* Base styles */
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Focus visible for accessibility */
+*:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Buttons */
+.btn-primary {
+  @apply bg-primary text-white px-6 py-3 rounded-lg font-medium
+         transition-all duration-200 ease-in-out
+         hover:bg-primary-light hover:shadow-md
+         active:scale-[0.98]
+         focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
+}
+
+.btn-secondary {
+  @apply bg-white text-primary border border-primary px-6 py-3 rounded-lg font-medium
+         transition-all duration-200 ease-in-out
+         hover:bg-gray-50 hover:shadow-sm
+         active:scale-[0.98]
+         focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
+}
+
+.btn-accent {
+  @apply bg-accent text-white px-6 py-3 rounded-lg font-medium
+         transition-all duration-200 ease-in-out
+         hover:bg-accent-light hover:shadow-md
+         active:scale-[0.98]
+         focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2;
+}
+
+/* Inputs */
+.input-field {
+  @apply w-full px-4 py-3 border border-border rounded-lg bg-white
+         transition-all duration-200 ease-in-out
+         placeholder:text-gray-400
+         hover:border-gray-300
+         focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent focus:shadow-sm;
+}
+
+/* Cards */
+.card {
+  @apply bg-card rounded-xl shadow-sm border border-border p-6
+         transition-shadow duration-200
+         hover:shadow-md;
+}
+
+.card-static {
+  @apply bg-card rounded-xl shadow-sm border border-border p-6;
+}
+
+/* Status badges */
+.badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+.badge-success {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800;
+}
+
+.badge-warning {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800;
+}
+
+.badge-muted {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600;
+}
+
+/* Links */
+a {
+  @apply transition-colors duration-150;
+}
+
+/* Loading animation */
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Chat message animations */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.3s ease-out;
+}
+
+/* Typing indicator bounce */
+@keyframes bounce-subtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.animate-bounce-subtle {
+  animation: bounce-subtle 0.6s ease-in-out infinite;
+}
+
+/* Selection color */
+::selection {
+  background-color: var(--primary);
+  color: white;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
 }

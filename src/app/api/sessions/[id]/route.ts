@@ -73,10 +73,12 @@ export async function PATCH(
 
   // Trigger document generation if session was completed
   if (status === "COMPLETED") {
-    // Run in background to not block the response
-    checkAndGenerateDocuments(chatSession.userId).catch((error) => {
-      console.error("Background document generation failed:", error);
-    });
+    try {
+      await checkAndGenerateDocuments(chatSession.userId);
+    } catch (error) {
+      console.error("Document generation failed:", error);
+      // Don't fail the request, just log the error
+    }
   }
 
   return NextResponse.json({ session: updatedSession });

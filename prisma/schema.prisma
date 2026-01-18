@@ -10,32 +10,37 @@ datasource db {
 
 // User represents a couple with shared login
 model User {
-  id           String     @id @default(uuid())
-  email        String     @unique
-  passwordHash String
-  partnerAName String
-  partnerBName String
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  sessions     Session[]
-  documents    Document[]
+  id                String     @id @default(uuid())
+  email             String     @unique
+  passwordHash      String
+  partnerAName      String
+  partnerBName      String
+  partnerAGender    Gender?
+  partnerBGender    Gender?
+  discoveryViewedAt DateTime?  // When user first viewed the discovery document
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+  sessions          Session[]
+  documents         Document[]
 }
 
 // Session for AI conversation
 model Session {
-  id            String        @id @default(uuid())
-  userId        String
-  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  partnerRole   PartnerRole
-  round         Round
-  status        SessionStatus @default(NOT_STARTED)
-  messages      Json          @default("[]") // Array of {role: 'user'|'assistant', content: string}
-  questionCount Int           @default(0)
-  insights      Json          @default("{}") // Structured data extracted by AI
-  startedAt     DateTime?
-  completedAt   DateTime?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  id               String            @id @default(uuid())
+  userId           String
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  partnerRole      PartnerRole
+  round            Round
+  status           SessionStatus     @default(NOT_STARTED)
+  messages         Json              @default("[]") // Array of {role: 'user'|'assistant', content: string}
+  questionCount    Int               @default(0)
+  insights         Json              @default("{}") // Structured data extracted by AI
+  sprintPreference SprintPreference? // For Round 2 closing
+  selectedGoals    Json?             // Goals selected for sprint
+  startedAt        DateTime?
+  completedAt      DateTime?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
 
   @@unique([userId, partnerRole, round])
 }
@@ -48,6 +53,7 @@ model Document {
   type      DocumentType
   content   String       @db.Text // Markdown content
   pdfUrl    String?
+  version   Int          @default(1) // For revision tracking
   createdAt DateTime     @default(now())
 
   @@unique([userId, type])
@@ -72,4 +78,17 @@ enum SessionStatus {
 enum DocumentType {
   DISCOVERY
   FINAL_SYNTHESIS
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  NON_BINARY
+  PREFER_NOT_TO_SAY
+}
+
+enum SprintPreference {
+  FULL
+  LIGHT
+  CUSTOM
 }

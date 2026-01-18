@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import DOMPurify from "dompurify";
 
 interface DocumentContentProps {
   content: string;
@@ -114,16 +115,21 @@ export function DocumentContent({ content }: DocumentContentProps) {
       // Regular paragraph
       else if (line.trim()) {
         flushList();
-        // Handle inline bold
+        // Handle inline bold with sanitization
         const formattedLine = line.replace(
           /\*\*(.+?)\*\*/g,
           '<strong class="font-semibold">$1</strong>'
         );
+        // Sanitize HTML to prevent XSS attacks
+        const sanitizedHtml = DOMPurify.sanitize(formattedLine, {
+          ALLOWED_TAGS: ['strong', 'em', 'b', 'i'],
+          ALLOWED_ATTR: ['class'],
+        });
         elements.push(
           <p
             key={elements.length}
             className="text-foreground mb-3 leading-relaxed"
-            dangerouslySetInnerHTML={{ __html: formattedLine }}
+            dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
           />
         );
       }

@@ -64,6 +64,11 @@ export default async function SessionPage({
       ? chatSession.user.partnerBName
       : chatSession.user.partnerAName;
 
+  const otherPartnerGender =
+    chatSession.partnerRole === "A"
+      ? chatSession.user.partnerBGender
+      : chatSession.user.partnerAGender;
+
   // Show partner confirmation if session not started
   if (chatSession.status === "NOT_STARTED") {
     return (
@@ -81,6 +86,7 @@ export default async function SessionPage({
       sessionId={chatSession.id}
       partnerName={partnerName}
       otherPartnerName={otherPartnerName}
+      otherPartnerGender={otherPartnerGender}
       round={chatSession.round}
       initialMessages={(chatSession.messages as unknown as Array<{ role: string; content: string }>) || []}
       initialQuestionCount={chatSession.questionCount}

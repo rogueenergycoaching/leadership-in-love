@@ -35,10 +35,24 @@ export default async function DocumentPage({
     redirect("/dashboard");
   }
 
+  // Track first view of Discovery document
+  if (document.type === "DISCOVERY") {
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { discoveryViewedAt: true },
+    });
+    if (user && !user.discoveryViewedAt) {
+      await prisma.user.update({
+        where: { id: session.user.id },
+        data: { discoveryViewedAt: new Date() },
+      });
+    }
+  }
+
   const title =
     document.type === "DISCOVERY"
-      ? "Discovery Document"
-      : "Your Shared Vision";
+      ? "Your Real Needs"
+      : "Your Commitments";
 
   return (
     <div className="min-h-screen bg-background">

@@ -24,6 +24,8 @@ export function RegisterForm() {
       confirmPassword: formData.get("confirmPassword") as string,
       partnerAName: (formData.get("partnerAName") as string).trim(),
       partnerBName: (formData.get("partnerBName") as string).trim(),
+      partnerAGender: formData.get("partnerAGender") as string,
+      partnerBGender: formData.get("partnerBGender") as string,
     };
 
     // Client-side validation
@@ -43,6 +45,8 @@ export function RegisterForm() {
           password: data.password,
           partnerAName: data.partnerAName,
           partnerBName: data.partnerBName,
+          partnerAGender: data.partnerAGender,
+          partnerBGender: data.partnerBGender,
         }),
       });
 
@@ -142,45 +146,93 @@ export function RegisterForm() {
       </div>
 
       <div className="border-t border-border pt-4 mt-4">
-        <p className="text-sm text-muted mb-4">Partner Names</p>
+        <p className="text-sm text-muted mb-4">Partner Information</p>
         <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label
-              htmlFor="partnerAName"
-              className="block text-sm font-medium mb-2"
-            >
-              Partner 1
-            </label>
-            <input
-              id="partnerAName"
-              name="partnerAName"
-              type="text"
-              autoComplete="given-name"
-              className={inputClassName("partnerAName")}
-              placeholder="First name"
-            />
-            {errors.partnerAName && (
-              <p className="text-red-600 text-sm mt-1">{errors.partnerAName}</p>
-            )}
+          <div className="space-y-3">
+            <div>
+              <label
+                htmlFor="partnerAName"
+                className="block text-sm font-medium mb-2"
+              >
+                Partner 1 Name
+              </label>
+              <input
+                id="partnerAName"
+                name="partnerAName"
+                type="text"
+                autoComplete="given-name"
+                className={inputClassName("partnerAName")}
+                placeholder="First name"
+              />
+              {errors.partnerAName && (
+                <p className="text-red-600 text-sm mt-1">{errors.partnerAName}</p>
+              )}
+            </div>
+            <div>
+              <label
+                htmlFor="partnerAGender"
+                className="block text-sm font-medium mb-2"
+              >
+                Gender
+              </label>
+              <select
+                id="partnerAGender"
+                name="partnerAGender"
+                className={inputClassName("partnerAGender")}
+              >
+                <option value="">Select...</option>
+                <option value="MALE">Male</option>
+                <option value="FEMALE">Female</option>
+                <option value="NON_BINARY">Non-binary</option>
+                <option value="PREFER_NOT_TO_SAY">Prefer not to say</option>
+              </select>
+              {errors.partnerAGender && (
+                <p className="text-red-600 text-sm mt-1">{errors.partnerAGender}</p>
+              )}
+            </div>
           </div>
-          <div>
-            <label
-              htmlFor="partnerBName"
-              className="block text-sm font-medium mb-2"
-            >
-              Partner 2
-            </label>
-            <input
-              id="partnerBName"
-              name="partnerBName"
-              type="text"
-              autoComplete="off"
-              className={inputClassName("partnerBName")}
-              placeholder="First name"
-            />
-            {errors.partnerBName && (
-              <p className="text-red-600 text-sm mt-1">{errors.partnerBName}</p>
-            )}
+          <div className="space-y-3">
+            <div>
+              <label
+                htmlFor="partnerBName"
+                className="block text-sm font-medium mb-2"
+              >
+                Partner 2 Name
+              </label>
+              <input
+                id="partnerBName"
+                name="partnerBName"
+                type="text"
+                autoComplete="off"
+                className={inputClassName("partnerBName")}
+                placeholder="First name"
+              />
+              {errors.partnerBName && (
+                <p className="text-red-600 text-sm mt-1">{errors.partnerBName}</p>
+              )}
+            </div>
+            <div>
+              <label
+                htmlFor="partnerBGender"
+                className="block text-sm font-medium mb-2"
+              >
+                Gender
+              </label>
+              <select
+                id="partnerBGender"
+                name="partnerBGender"
+                className={inputClassName("partnerBGender")}
+              >
+                <option value="">Select...</option>
+                <option value="MALE">Male</option>
+                <option value="FEMALE">Female</option>
+                <option value="NON_BINARY">Non-binary</option>
+                <option value="PREFER_NOT_TO_SAY">Prefer not to say</option>
+              </select>
+              {errors.partnerBGender && (
+                <p className="text-red-600 text-sm mt-1">{errors.partnerBGender}</p>
+              )}
+            </div>
           </div>
         </div>
       </div>

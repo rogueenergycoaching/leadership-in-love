@@ -13,16 +13,26 @@ interface ChatInterfaceProps {
   sessionId: string;
   partnerName: string;
   otherPartnerName: string;
+  otherPartnerGender: string | null;
   round: string;
   initialMessages: Message[];
   initialQuestionCount: number;
   isCompleted: boolean;
 }
 
+function getPossessivePronoun(gender: string | null): string {
+  switch (gender) {
+    case "MALE": return "his";
+    case "FEMALE": return "her";
+    default: return "their";
+  }
+}
+
 export function ChatInterface({
   sessionId,
   partnerName,
   otherPartnerName,
+  otherPartnerGender,
   round,
   initialMessages,
   initialQuestionCount,
@@ -37,9 +47,8 @@ export function ChatInterface({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  const roundLabel = round === "ROUND_1" ? "Round 1" : "Round 2";
+  const roundLabel = round === "ROUND_1" ? "What are you aiming for?" : "Your contribution to the team";
   const maxQuestions = round === "ROUND_1" ? 12 : 9;
-  const minQuestions = round === "ROUND_1" ? 8 : 6;
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -176,10 +185,14 @@ export function ChatInterface({
             </p>
           </div>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-muted">
-              Question {Math.min(questionCount, maxQuestions)} of ~
-              {minQuestions}-{maxQuestions}
-            </span>
+            <div className="flex items-center gap-2">
+              <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-primary transition-all duration-300"
+                  style={{ width: `${Math.min((questionCount / maxQuestions) * 100, 100)}%` }}
+                />
+              </div>
+            </div>
             {!sessionComplete && (
               <button
                 onClick={handleSaveAndExit}
@@ -222,16 +235,8 @@ export function ChatInterface({
           {loading && (
             <div className="flex justify-start">
               <div className="bg-card border border-border rounded-2xl px-4 py-3">
-                <div className="flex gap-1">
-                  <span className="w-2 h-2 bg-muted rounded-full animate-bounce" />
-                  <span
-                    className="w-2 h-2 bg-muted rounded-full animate-bounce"
-                    style={{ animationDelay: "0.1s" }}
-                  />
-                  <span
-                    className="w-2 h-2 bg-muted rounded-full animate-bounce"
-                    style={{ animationDelay: "0.2s" }}
-                  />
+                <div className="w-16 h-1 bg-gray-200 rounded-full overflow-hidden">
+                  <div className="h-full bg-primary/50 animate-pulse-soft w-full" />
                 </div>
               </div>
             </div>
@@ -248,10 +253,9 @@ export function ChatInterface({
                   saved.
                 </p>
                 <p className="text-green-700 text-sm mt-2">
-                  Encourage {otherPartnerName} to complete their session so you
-                  can receive your{" "}
-                  {round === "ROUND_1" ? "Discovery Document" : "Final Synthesis"}
-                  .
+                  When {otherPartnerName} completes {getPossessivePronoun(otherPartnerGender)} session, your{" "}
+                  {round === "ROUND_1" ? "Your Real Needs" : "Your Commitments"}{" "}
+                  document will be ready on the dashboard.
                 </p>
               </div>
             </div>
@@ -274,8 +278,8 @@ export function ChatInterface({
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Type your response..."
-              rows={1}
-              className="flex-1 input-field resize-none min-h-[48px] max-h-[200px]"
+              rows={4}
+              className="flex-1 input-field resize-none min-h-[120px] max-h-[200px]"
               disabled={loading}
             />
             <button

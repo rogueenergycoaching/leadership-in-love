@@ -27,6 +27,21 @@ export function validateName(name: string, fieldName: string): string | null {
   if (name.trim().length < 1) return `${fieldName} is required`;
   if (name.length > 50) return `${fieldName} is too long (max 50 characters)`;
 
+  // Only allow letters (including accented), spaces, hyphens, and apostrophes
+  // This prevents HTML/script injection in names
+  const nameRegex = /^[\p{L}\s\-']+$/u;
+  if (!nameRegex.test(name)) {
+    return `${fieldName} can only contain letters, spaces, hyphens, and apostrophes`;
+  }
+
+  return null;
+}
+
+const VALID_GENDERS = ["MALE", "FEMALE", "NON_BINARY", "PREFER_NOT_TO_SAY"];
+
+export function validateGender(gender: string, fieldName: string): string | null {
+  if (!gender) return `${fieldName} is required`;
+  if (!VALID_GENDERS.includes(gender)) return `${fieldName} must be a valid option`;
   return null;
 }
 
@@ -36,6 +51,8 @@ export function validateRegistration(data: {
   confirmPassword: string;
   partnerAName: string;
   partnerBName: string;
+  partnerAGender: string;
+  partnerBGender: string;
 }): ValidationResult {
   const errors: Record<string, string> = {};
 
@@ -54,6 +71,12 @@ export function validateRegistration(data: {
 
   const partnerBError = validateName(data.partnerBName, "Partner 2 name");
   if (partnerBError) errors.partnerBName = partnerBError;
+
+  const partnerAGenderError = validateGender(data.partnerAGender, "Partner 1 gender");
+  if (partnerAGenderError) errors.partnerAGender = partnerAGenderError;
+
+  const partnerBGenderError = validateGender(data.partnerBGender, "Partner 2 gender");
+  if (partnerBGenderError) errors.partnerBGender = partnerBGenderError;
 
   return {
     isValid: Object.keys(errors).length === 0,

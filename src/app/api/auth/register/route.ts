@@ -5,9 +5,9 @@ import { hashPassword } from "@/lib/password";
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { email, password, partnerAName, partnerBName } = body;
+    const { email, password, partnerAName, partnerBName, partnerAGender, partnerBGender } = body;
 
-    if (!email || !password || !partnerAName || !partnerBName) {
+    if (!email || !password || !partnerAName || !partnerBName || !partnerAGender || !partnerBGender) {
       return NextResponse.json(
         { error: "All fields are required" },
         { status: 400 }
@@ -26,8 +26,9 @@ export async function POST(request: Request) {
     });
 
     if (existingUser) {
+      // Use a generic message to prevent email enumeration attacks
       return NextResponse.json(
-        { error: "An account with this email already exists" },
+        { error: "Unable to create account. If you already have an account, please try logging in." },
         { status: 400 }
       );
     }
@@ -40,6 +41,8 @@ export async function POST(request: Request) {
         passwordHash,
         partnerAName,
         partnerBName,
+        partnerAGender,
+        partnerBGender,
       },
     });
 

@@ -87,8 +87,16 @@ export async function POST(request: Request) {
       content = await generateFinalSynthesis(userId);
     }
 
-    const document = await prisma.document.create({
-      data: {
+    // Use upsert to handle race conditions where document might already exist
+    const document = await prisma.document.upsert({
+      where: {
+        userId_type: { userId, type },
+      },
+      update: {
+        content,
+        version: { increment: 1 },
+      },
+      create: {
         userId,
         type,
         content,

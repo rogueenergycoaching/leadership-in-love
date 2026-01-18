@@ -192,13 +192,13 @@ export async function GET(
 
   const title =
     document.type === "DISCOVERY"
-      ? "Discovery Document"
-      : "Your Shared Vision";
+      ? "Your Real Needs"
+      : "Your Commitments";
 
   const filename =
     document.type === "DISCOVERY"
-      ? "discovery-document.pdf"
-      : "shared-vision.pdf";
+      ? "your-real-needs.pdf"
+      : "your-commitments.pdf";
 
   try {
     const pdfContent = parseMarkdownToPDF(document.content);

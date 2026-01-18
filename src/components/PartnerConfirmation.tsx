@@ -18,11 +18,11 @@ export function PartnerConfirmation({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  const roundLabel = round === "ROUND_1" ? "Round 1" : "Round 2";
+  const roundLabel = round === "ROUND_1" ? "What are you aiming for?" : "Your contribution to the team";
   const roundDescription =
     round === "ROUND_1"
-      ? "In this session, you'll explore the dreams and goals you and your partner shared when you first got together, and reflect on what they mean to you today."
-      : "In this session, you'll explore how you can contribute to your shared goals and support each other's individual priorities.";
+      ? "In this session, you'll explore the goals and dreams you have for your life together — past, present, and future — and what they really mean to you."
+      : "In this session, you'll explore how you can take leadership in supporting your shared goals and each other's individual priorities.";
 
   async function handleConfirm() {
     setLoading(true);
@@ -61,7 +61,7 @@ export function PartnerConfirmation({
         <div className="w-full max-w-lg">
           <div className="card text-center">
             <h2 className="text-2xl font-bold mb-2">
-              {roundLabel}: Goal Setting
+              {roundLabel}
             </h2>
             <p className="text-muted mb-6">{roundDescription}</p>
 

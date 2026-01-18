@@ -43,9 +43,9 @@ export async function checkAndGenerateDocuments(userId: string): Promise<void> {
             content,
           },
         });
-        console.log(`Discovery document generated for user ${userId}`);
+        console.log(`"Your Real Needs" document generated for user ${userId}`);
       } catch (error) {
-        console.error("Failed to generate Discovery document:", error);
+        console.error("Failed to generate 'Your Real Needs' document:", error);
       }
     }
   }
@@ -74,7 +74,7 @@ export async function checkAndGenerateDocuments(userId: string): Promise<void> {
             },
           });
         } catch (error) {
-          console.error("Failed to generate Discovery document:", error);
+          console.error("Failed to generate 'Your Real Needs' document:", error);
           return;
         }
       }
@@ -88,9 +88,9 @@ export async function checkAndGenerateDocuments(userId: string): Promise<void> {
             content,
           },
         });
-        console.log(`Final Synthesis generated for user ${userId}`);
+        console.log(`"Your Commitments" document generated for user ${userId}`);
       } catch (error) {
-        console.error("Failed to generate Final Synthesis:", error);
+        console.error("Failed to generate 'Your Commitments' document:", error);
       }
     }
   }
